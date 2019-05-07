@@ -1,0 +1,2 @@
+/*盒子模型转换*/
+input,textarea,img,video,object{  -ms-box-sizing:border-box;  box-sizing: border-box;  }

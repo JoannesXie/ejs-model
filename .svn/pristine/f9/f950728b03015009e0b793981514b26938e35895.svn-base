@@ -1,0 +1,5 @@
+build/
+config/*.js
+node_modules/
+dist/
+src/vendor
