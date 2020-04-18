@@ -3,13 +3,53 @@ const HtmlWebpackPlugin = require("html-webpack-plugin"); //html插件
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //css打包插件
 const TerserJSPlugin = require("terser-webpack-plugin"); //js压缩插件
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin"); //css压缩插件
-const { CleanWebpackPlugin } = require("clean-webpack-plugin"); // 清理之前的dist
-const CopyWebpackPlugin = require("copy-webpack-plugin"); // 文件复制
+const glob = require("glob");
+let setMAP = () => {
+  const entry = {};
+  const HtmlWebpackPlugins = [];
+  //获取当前目录下匹配 "./src/views/*/index.js" 的文件目录
+  const entryFiles = glob.sync(path.join(__dirname, "../src/views/*/index.js"));
+  entryFiles.forEach((v) => {
+    const Match = v.match(/src\/views\/(.*)\/index\.js/); //获取文件夹名
+    const pageName = Match && Match[1];
+    entry[pageName] = v; //设置entry
+    //设置多个html插件
+    HtmlWebpackPlugins.push(
+      new HtmlWebpackPlugin({
+        template: v.replace("index.js", "index.ejs"),
+        filename: `${pageName}/index.html`,
+        chunks: [pageName],
+        favicon: path.resolve(__dirname, "../favicon.ico"), //生成一个icon图标
+        minify: {
+          caseSensitive: true,
+          collapseBooleanAttributes: true,
+          collapseWhitespace: true,
+          minifyCSS: true,
+          minifyJS: true,
+          removeAttributeQuotes: true,
+          removeComments: true,
+          removeCommentsFromCDATA: true,
+        },
+      })
+    );
+  });
+  return {
+    entry,
+    HtmlWebpackPlugins,
+  };
+};
+const { entry, HtmlWebpackPlugins } = setMAP();
 module.exports = {
-  entry: "./index.js",
+  entry: entry,
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "index.bundle.js",
+    filename: "static/js/[name].[hash:6].js",
+    path: path.resolve(__dirname, "../dist"),
+    // publicPath: "../"
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "../src"),
+    },
   },
   optimization: {
     //优化项
@@ -32,38 +72,11 @@ module.exports = {
       },
     },
   },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./index.ejs",
-      filename: "index.html",
-      favicon: "./favicon.ico",
-      minify: {
-        caseSensitive: true,
-        collapseBooleanAttributes: true,
-        collapseWhitespace: true,
-        minifyCSS: true,
-        minifyJS: true,
-        removeAttributeQuotes: true,
-        removeComments: true,
-        removeCommentsFromCDATA: true,
-      },
-    }),
     new MiniCssExtractPlugin({
-      filename: "main.[hash:8].css",
+      filename: "static/css/[name].[hash:6].css",
     }),
-    new CleanWebpackPlugin(),
-    new CopyWebpackPlugin([
-      // {
-      //   from: "./src/vendor",
-      //   to: "vendor",
-      // },
-    ]),
-  ],
+  ].concat(HtmlWebpackPlugins),
   module: {
     rules: [
       //JS
@@ -104,6 +117,7 @@ module.exports = {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
         // postcss和autoprefixer 已经在postcss.config.js和packge.json中配置过
+        exclude: /node_modules/,
       },
       {
         test: /\.scss$/,
@@ -113,6 +127,7 @@ module.exports = {
           "postcss-loader", // 使用 此loader自动给css添加浏览器样式
           "sass-loader", // 把 scss => css
         ],
+        exclude: /node_modules/,
       },
       // 图片
       {
@@ -123,11 +138,14 @@ module.exports = {
           loader: "url-loader",
           options: {
             limit: 200 * 1024, //200k
+            name: "static/img/[name].[hash:6].[ext]",
           },
         },
+        exclude: /node_modules/,
       },
       {
         test: /\.html$/,
+        exclude: /node_modules/,
         use: "html-loader", //html中引入图片
       },
       //文件
@@ -135,13 +153,14 @@ module.exports = {
         // 文件解析
         test: /\.(eot|woff|ttf|woff2|appcache|mp4|pdf)(\?|$)/,
         loader: "file-loader",
+        exclude: /node_modules/,
         query: {
           // 这么多文件，ext不同，所以需要使用[ext]
-          name: "assets/[name].[hash:7].[ext]",
+          name: "static/files/[name].[hash:6].[ext]",
         },
       },
       // ejs模板
-      { test: /\.ejs$/, use: ["ejs-loader"] },
+      { test: /\.ejs$/, exclude: /node_modules/, use: ["ejs-loader"] },
     ],
   },
 };

@@ -4,8 +4,8 @@
   "description": "使用webpack4+ejs搭建静态页面开发模板",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server  --config webpack.dev.js",
-    "build": "webpack  --progress --color --watch --config webpack.prod.js"
+    "dev": "webpack-dev-server  --config ./build/webpack.dev.js",
+    "build": "webpack  --progress --color  --config ./build/webpack.prod.js"
   },
   "author": "Jonesxie",
   "license": "ISC",
@@ -29,6 +29,7 @@
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.0",
     "file-loader": "^6.0.0",
+    "glob": "^7.1.6",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.2.0",
     "mini-css-extract-plugin": "^0.9.0",
