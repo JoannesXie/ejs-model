@@ -4,7 +4,7 @@
   "description": "使用webpack4+ejs搭建静态页面开发模板",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server  --config ./build/webpack.dev.js",
+    "dev": "webpack-dev-server  --progress --config ./build/webpack.dev.js",
     "build": "webpack  --progress --color  --config ./build/webpack.prod.js"
   },
   "author": "Jonesxie",
@@ -41,7 +41,8 @@
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "webpackbar": "^4.0.0"
   },
   "postcss": {
     "plugins": {

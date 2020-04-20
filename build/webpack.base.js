@@ -3,6 +3,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin"); //html插件
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //css打包插件
 const TerserJSPlugin = require("terser-webpack-plugin"); //js压缩插件
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin"); //css压缩插件
+const loaders = require("./loaders");
+const plugins = require("./plugins");
 const glob = require("glob");
 let setMAP = () => {
   const entry = {};
@@ -16,11 +18,11 @@ let setMAP = () => {
     //设置多个html插件
     HtmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
-        // template: v.replace("index.js", "index.ejs"),
         template: v.replace("index.js", "html.js"),
         filename: `${pageName}/index.html`,
         chunks: [pageName],
         favicon: path.resolve(__dirname, "../favicon.ico"), //生成一个icon图标
+        cache: true,
         minify: {
           caseSensitive: true,
           collapseBooleanAttributes: true,
@@ -77,97 +79,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "static/css/[name].[hash:6].css",
     }),
-  ].concat(HtmlWebpackPlugins),
+  ].concat(HtmlWebpackPlugins, plugins),
   module: {
-    rules: [
-      //JS
-      {
-        test: /\.js$/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
-            plugins: [
-              [
-                "@babel/plugin-proposal-decorators",
-                {
-                  legacy: true,
-                },
-              ],
-              [
-                "@babel/plugin-proposal-class-properties",
-                {
-                  loose: true,
-                },
-              ],
-            ],
-          },
-        },
-        exclude: /node_modules/,
-      },
-      // css
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: "../../",
-            },
-          },
-          "css-loader",
-          "postcss-loader",
-        ],
-        // postcss和autoprefixer 已经在postcss.config.js和packge.json中配置过
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: "../../",
-            },
-          }, // 使用 此插件loader替换 style-loader
-          "css-loader",
-          "postcss-loader", // 使用 此loader自动给css添加浏览器样式
-          "sass-loader", // 把 scss => css
-        ],
-        exclude: /node_modules/,
-      },
-      // 图片
-      {
-        test: /\.(png|jpg|jpeg|gif)$/,
-        //当图片小于多少k时，转为base64，否则使用file-loader导出
-        // use:'file-loader'
-        use: {
-          loader: "url-loader",
-          options: {
-            limit: 200 * 1024, //200k
-            name: "static/img/[name].[hash:6].[ext]",
-          },
-        },
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.html$/,
-        exclude: /node_modules/,
-        use: "html-loader", //html中引入图片
-      },
-      //文件
-      {
-        // 文件解析
-        test: /\.(eot|woff|ttf|woff2|appcache|mp4|pdf)(\?|$)/,
-        loader: "file-loader",
-        exclude: /node_modules/,
-        query: {
-          // 这么多文件，ext不同，所以需要使用[ext]
-          name: "static/files/[name].[hash:6].[ext]",
-        },
-      },
-      // ejs模板
-      { test: /\.ejs$/, exclude: /node_modules/, use: ["ejs-loader"] },
-    ],
+    rules: loaders,
   },
 };
