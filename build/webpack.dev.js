@@ -7,9 +7,9 @@ module.exports = smart(base, {
   devServer: {
     port: 8088, //端口
     open: true,
-    openPage: "/index",
-    // 服务器将从哪个目录去查找内容文件
-    contentBase: path.resolve(__dirname, "../dist"),
+    openPage: "index/index.html",
+    // 服务器将从哪个目录去查找静态内容文件
+    contentBase: path.resolve(__dirname, "../src"),
   },
   devtool: "source-map",
   plugins: [],

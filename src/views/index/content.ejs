@@ -1,0 +1,10 @@
+<!-- <img src="${require('./static/icon.png')}" alt="" /> -->
+<div>this is index page</div>
+<button class="btn">点击</button>
+<ul>
+  <% for( var i=0;i<3;i++){ %>
+  <li><%= i %></li>
+  <% }; %>
+</ul>
+<p><%= env %></p>
+<script type="text/javascript" src="<%= publicPath %>vendor/swiper/index.js"></script>

@@ -16,7 +16,8 @@ let setMAP = () => {
     //设置多个html插件
     HtmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
-        template: v.replace("index.js", "index.ejs"),
+        // template: v.replace("index.js", "index.ejs"),
+        template: v.replace("index.js", "html.js"),
         filename: `${pageName}/index.html`,
         chunks: [pageName],
         favicon: path.resolve(__dirname, "../favicon.ico"), //生成一个icon图标
@@ -44,7 +45,7 @@ module.exports = {
   output: {
     filename: "static/js/[name].[hash:6].js",
     path: path.resolve(__dirname, "../dist"),
-    // publicPath: "../"
+    // publicPath: "../",
   },
   resolve: {
     alias: {
@@ -82,47 +83,53 @@ module.exports = {
       //JS
       {
         test: /\.js$/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-env"],
-              plugins: [
-                [
-                  "@babel/plugin-transform-runtime",
-                  {
-                    corejs: 3,
-                  },
-                ],
-                [
-                  "@babel/plugin-proposal-decorators",
-                  {
-                    legacy: true,
-                  },
-                ],
-                [
-                  "@babel/plugin-proposal-class-properties",
-                  {
-                    loose: true,
-                  },
-                ],
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: [
+              [
+                "@babel/plugin-proposal-decorators",
+                {
+                  legacy: true,
+                },
               ],
-            },
+              [
+                "@babel/plugin-proposal-class-properties",
+                {
+                  loose: true,
+                },
+              ],
+            ],
           },
-        ],
+        },
         exclude: /node_modules/,
       },
       // css
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: "../../",
+            },
+          },
+          "css-loader",
+          "postcss-loader",
+        ],
         // postcss和autoprefixer 已经在postcss.config.js和packge.json中配置过
         exclude: /node_modules/,
       },
       {
         test: /\.scss$/,
         use: [
-          MiniCssExtractPlugin.loader, // 使用 此插件loader替换 style-loader
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: "../../",
+            },
+          }, // 使用 此插件loader替换 style-loader
           "css-loader",
           "postcss-loader", // 使用 此loader自动给css添加浏览器样式
           "sass-loader", // 把 scss => css

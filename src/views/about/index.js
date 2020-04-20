@@ -1,1 +1,1 @@
-console.log(`this is about page`);
+require("./static/index.css");
