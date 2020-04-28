@@ -9,15 +9,11 @@
   },
   "author": "Jonesxie",
   "license": "ISC",
-  "dependencies": {
-    "@babel/runtime": "^7.9.2",
-    "@babel/runtime-corejs3": "^7.9.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "autoprefixer": "^9.7.6",
     "babel-loader": "^8.1.0",
@@ -25,8 +21,6 @@
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.5.2",
     "ejs-loader": "^0.3.6",
-    "eslint": "^6.8.0",
-    "eslint-loader": "^4.0.0",
     "file-loader": "^6.0.0",
     "glob": "^7.1.6",
     "html-loader": "^1.1.0",

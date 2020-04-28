@@ -45,7 +45,7 @@ const { entry, HtmlWebpackPlugins } = setMAP();
 module.exports = {
   entry: entry,
   output: {
-    filename: "static/js/[name].[hash:6].js",
+    filename: "js/[name].[hash:6].js",
     path: path.resolve(__dirname, "../dist"),
     // publicPath: "../",
   },
@@ -77,7 +77,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "static/css/[name].[hash:6].css",
+      filename: "css/[name].[hash:6].css",
     }),
   ].concat(HtmlWebpackPlugins, plugins),
   module: {

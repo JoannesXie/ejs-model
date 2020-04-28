@@ -1,4 +1,5 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //css打包插件
+const path = require("path");
 const loaders = [
   //JS
   {
@@ -31,9 +32,6 @@ const loaders = [
     use: [
       {
         loader: MiniCssExtractPlugin.loader,
-        options: {
-          publicPath: "../../",
-        },
       },
       "css-loader",
       "postcss-loader",
@@ -46,9 +44,9 @@ const loaders = [
     use: [
       {
         loader: MiniCssExtractPlugin.loader,
-        options: {
-          publicPath: "../../",
-        },
+        // options: {
+        //   publicPath: "../../", // 处理css中图片路径问题
+        // },
       }, // 使用 此插件loader替换 style-loader
       "css-loader",
       "postcss-loader", // 使用 此loader自动给css添加浏览器样式
@@ -65,7 +63,8 @@ const loaders = [
       loader: "url-loader",
       options: {
         limit: 200 * 1024, //200k
-        name: "static/img/[name].[hash:6].[ext]",
+        name: "img/[name].[hash:6].[ext]",
+        publicPath: "../",
       },
     },
     exclude: /node_modules/,
@@ -85,7 +84,8 @@ const loaders = [
     exclude: /node_modules/,
     query: {
       // 这么多文件，ext不同，所以需要使用[ext]
-      name: "static/files/[name].[hash:6].[ext]",
+      name: "files/[name].[hash:6].[ext]",
+      publicPath: "../",
     },
   },
 ];
