@@ -70,16 +70,12 @@ const loaders = [
     },
     exclude: /node_modules/,
   },
+  // ejs模板
+  { test: /\.ejs$/, exclude: /node_modules/, use: ["ejs-loader"] },
   {
     test: /\.html$/,
     exclude: /node_modules/,
-    use: {
-      loader: "html-loader",
-      options: {
-        attrs: ["img:src", "img:data-src", "audio:src"],
-        minimize: true,
-      },
-    }, //html中引入图片
+    loader: "html-loader", //html中引入图片
   },
   //文件
   {
@@ -92,8 +88,6 @@ const loaders = [
       name: "static/files/[name].[hash:6].[ext]",
     },
   },
-  // ejs模板
-  { test: /\.ejs$/, exclude: /node_modules/, use: ["ejs-loader"] },
 ];
 
 module.exports = loaders;
